@@ -110,8 +110,8 @@ public class BackingAppManagementService {
 			.then();
 	}
 
-	public Mono<BackingApplications> getDeployedBackingApplications(String serviceInstanceId) {
-		return getBackingApplicationsForService(serviceInstanceId)
+	public Mono<BackingApplications> getDeployedBackingApplications(String serviceInstanceId, String serviceName, String planName) {
+		return getBackingApplicationsForService(serviceInstanceId, serviceName, planName)
 			.flatMapMany(Flux::fromIterable)
 			.flatMap(app ->
 				appDeployer
@@ -120,9 +120,9 @@ public class BackingAppManagementService {
 						.properties(app.getProperties())
 						.build())
 					.flatMap(response -> Flux.fromIterable(response.getServices())
-						.map(serviceName ->
+						.map(boundServiceName ->
 							ServicesSpec.builder()
-								.serviceInstanceName(serviceName)
+								.serviceInstanceName(boundServiceName)
 								.build())
 						.collectList()
 						.map(services -> BackingApplication
@@ -143,7 +143,12 @@ public class BackingAppManagementService {
 		return appDeployer.getServiceInstance(GetServiceInstanceRequest.builder()
 			.serviceInstanceId(serviceInstanceId)
 			.build())
-			.flatMap(response -> findBrokeredService(response.getService(), response.getPlan()))
+			.flatMap(response -> getBackingApplicationsForService(serviceInstanceId, response.getService(),
+				response.getPlan()));
+	}
+
+	private Mono<BackingApplications> getBackingApplicationsForService(String serviceInstanceId, String serviceName, String planName) {
+		return findBrokeredService(serviceName, planName)
 			.flatMap(brokeredService -> updateBackingApps(brokeredService, serviceInstanceId))
 			.map(backingApplications -> BackingApplications.builder().backingApplications(backingApplications).build());
 	}

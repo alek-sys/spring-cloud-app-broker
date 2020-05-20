@@ -319,13 +319,6 @@ class BackingAppManagementServiceTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	void getDeployedBackingApplications() {
-		given(appDeployer.getServiceInstance(any(GetServiceInstanceRequest.class)))
-			.willReturn(Mono.just(GetServiceInstanceResponse.builder()
-				.name("foo-service")
-				.plan("plan1")
-				.service("service1")
-				.build()));
-
 		given(appDeployer.get(any(GetApplicationRequest.class)))
 			.willReturn(Mono.just(GetApplicationResponse.builder()
 					.name("testApp1")
@@ -340,7 +333,7 @@ class BackingAppManagementServiceTest {
 		given(targetService.addToBackingApplications(eq(backingApps), any(), eq("foo-service-id")))
 			.willReturn(Mono.just(backingApps));
 
-		StepVerifier.create(backingAppManagementService.getDeployedBackingApplications("foo-service-id"))
+		StepVerifier.create(backingAppManagementService.getDeployedBackingApplications("foo-service-id", "service1", "plan1"))
 			.expectNext(BackingApplications.builder()
 				.backingApplication(BackingApplication.builder()
 					.name("testApp1")
@@ -356,7 +349,6 @@ class BackingAppManagementServiceTest {
 			.verifyComplete();
 
 		then(targetService).should().addToBackingApplications(eq(backingApps), any(), eq("foo-service-id"));
-		then(appDeployer).should().getServiceInstance(argThat(req -> "foo-service-id".equals(req.getServiceInstanceId())));
 		then(appDeployer).should().get(argThat(req -> "testApp1".equals(req.getName())));
 		then(appDeployer).should().get(argThat(req -> "testApp2".equals(req.getName())));
 

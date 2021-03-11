@@ -1,6 +1,10 @@
 {
 	"guid": "@guid",
 	"state": "DEPLOYED",
+	"status": {
+		"value": "FINALIZED",
+		"reason": "DEPLOYED"
+	},
 	"droplet": {
 		"guid": "44ccfa61-dbcf-4a0d-82fe-f668e9d2a962"
 	},

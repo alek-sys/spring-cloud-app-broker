@@ -63,7 +63,6 @@ import org.cloudfoundry.client.v3.builds.GetBuildResponse;
 import org.cloudfoundry.client.v3.deployments.CreateDeploymentRequest;
 import org.cloudfoundry.client.v3.deployments.CreateDeploymentResponse;
 import org.cloudfoundry.client.v3.deployments.DeploymentRelationships;
-import org.cloudfoundry.client.v3.deployments.DeploymentState;
 import org.cloudfoundry.client.v3.deployments.DeploymentStatusValue;
 import org.cloudfoundry.client.v3.deployments.GetDeploymentRequest;
 import org.cloudfoundry.client.v3.deployments.GetDeploymentResponse;

@@ -254,8 +254,10 @@ class CloudFoundryAppDeployerUpdateApplicationTest {
 		given(deploymentsV3.get(any()))
 			.willReturn(Mono.just(GetDeploymentResponse.builder()
 				.state(DeploymentState.DEPLOYED)
-				.status(org.cloudfoundry.client.v3.deployments.Status.builder().value(DeploymentStatusValue.FINALIZED).reason(
-					DeploymentStatusReason.DEPLOYED).build())
+				.status(org.cloudfoundry.client.v3.deployments.Status.builder()
+					.value(DeploymentStatusValue.FINALIZED)
+					.reason(DeploymentStatusReason.DEPLOYED)
+					.build())
 				.createdAt("DATETIME")
 				.id("deployment-id")
 				.build()));

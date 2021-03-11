@@ -64,6 +64,7 @@ import org.cloudfoundry.client.v3.deployments.CreateDeploymentRequest;
 import org.cloudfoundry.client.v3.deployments.CreateDeploymentResponse;
 import org.cloudfoundry.client.v3.deployments.DeploymentRelationships;
 import org.cloudfoundry.client.v3.deployments.DeploymentState;
+import org.cloudfoundry.client.v3.deployments.DeploymentStatusValue;
 import org.cloudfoundry.client.v3.deployments.GetDeploymentRequest;
 import org.cloudfoundry.client.v3.deployments.GetDeploymentResponse;
 import org.cloudfoundry.client.v3.packages.CreatePackageRequest;
@@ -447,7 +448,7 @@ public class CloudFoundryAppDeployer implements AppDeployer, ResourceLoaderAware
 				.builder()
 				.deploymentId(deploymentId)
 				.build())
-			.filter(p -> p.getState().equals(DeploymentState.DEPLOYED))
+			.filter(p -> p.getStatus().getValue().equals(DeploymentStatusValue.FINALIZED))
 			.repeatWhenEmpty(getExponentialBackOff())
 			.doOnRequest(l -> LOG.debug("Waiting for deployment to complete. deploymentId={}", deploymentId))
 			.doOnSuccess(response -> {
